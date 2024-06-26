@@ -21,6 +21,7 @@ const productValidationSchema = z.object({
     .array(variantVaalidationSchema)
     .nonempty('Variants must not be empty'),
   inventory: inventoryValidationSchema,
+  isDeleted: z.boolean(),
 });
 
 export default productValidationSchema;
