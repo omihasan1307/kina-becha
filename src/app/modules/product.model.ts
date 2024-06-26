@@ -5,10 +5,6 @@ const variantSchema = new Schema<TVariants>({
   type: { type: String },
   value: {
     type: String,
-    enum: {
-      values: ['Black', 'Small', 'Red'],
-      message: '{VALUE} is not valid',
-    },
   },
 });
 
@@ -18,6 +14,7 @@ const inventorySchema = new Schema<TInventory>({
 });
 
 const productSchema = new Schema<TProduct>({
+  id: { type: String, require: [true, 'Id is required '], unique: true },
   name: { type: String, required: [true, 'Name is Reqquired'] },
   description: { type: String },
   price: { type: Number, required: [true, 'Price is required'] },

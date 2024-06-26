@@ -5,10 +5,11 @@ export type TInventory = {
 
 export type TVariants = {
   type: string;
-  value: 'Black' | 'Small' | 'Red';
+  value: string;
 };
 
 export type TProduct = {
+  id: string;
   name: string;
   description: string;
   price: number;
