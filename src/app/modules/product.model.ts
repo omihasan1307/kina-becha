@@ -25,4 +25,8 @@ const productSchema = new Schema<TProduct>({
   isDeleted: { type: Boolean, default: false },
 });
 
+productSchema.pre('find', function (next) {
+  next();
+});
+
 export const ProductModel = model<TProduct>('Product', productSchema);
