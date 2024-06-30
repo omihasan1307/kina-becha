@@ -8,4 +8,5 @@ This is a E-commerce platform which name is kina-becha . here simply product cre
 ## Installation
 
 You can clone the project from git hub and install it with npm .
-here is my github : https://github.com/omihasan1307/kina-becha
+
+Here is my github : https://github.com/omihasan1307/kina-becha
