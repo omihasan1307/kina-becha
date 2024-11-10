@@ -4,6 +4,10 @@ import { uploadOnCloud } from '../../../utils/cloudinary.utility';
 import { UploadModel } from './upload.model';
 
 const UploadFilesIntoDb = async (files: Express.Multer.File[], id: string) => {
+
+
+
+
   if (files && files.length > 0) {
     const uploadPromises = files.map((file) => uploadOnCloud(file.path));
     const uploadResults = await Promise.all(uploadPromises);

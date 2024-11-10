@@ -3,25 +3,16 @@ import { UploadServices } from './upoald.service';
 
 const createUpload = async (req: Request, res: Response) => {
   try {
-    let files: Express.Multer.File[] = [];
+    const files = req.files as
+      | { [fieldname: string]: Express.Multer.File[] }
+      | undefined;
+    const { id } = req.body; 
 
-    if (Array.isArray(req.files)) {
-      files = req.files;
-    } else if (
-      req.files &&
-      typeof req.files === 'object' &&
-      'files' in req.files
-    ) {
-      files = req.files.files as Express.Multer.File[];
-    }
-
-    const { id } = req.body;
-
-    if (!files.length || !files[0].path) {
+    if (!files?.files[0]?.path) {
       throw new Error('Images are required.');
     }
 
-    const result = await UploadServices.UploadFilesIntoDb(files, id);
+    const result = await UploadServices.UploadFilesIntoDb(files?.files, id);
 
     res.status(200).json({
       success: true,
@@ -36,6 +27,7 @@ const createUpload = async (req: Request, res: Response) => {
     });
   }
 };
+
 
 const getAllUploadFiles = async (req: Request, res: Response) => {
   try {
