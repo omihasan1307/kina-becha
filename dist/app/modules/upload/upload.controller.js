@@ -12,21 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UploadController = void 0;
 const upoald_service_1 = require("./upoald.service");
 const createUpload = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
-        let files = [];
-        if (Array.isArray(req.files)) {
-            files = req.files;
-        }
-        else if (req.files &&
-            typeof req.files === 'object' &&
-            'files' in req.files) {
-            files = req.files.files;
-        }
+        const files = req.files;
         const { id } = req.body;
-        if (!files.length || !files[0].path) {
+        if (!((_a = files === null || files === void 0 ? void 0 : files.files[0]) === null || _a === void 0 ? void 0 : _a.path)) {
             throw new Error('Images are required.');
         }
-        const result = yield upoald_service_1.UploadServices.UploadFilesIntoDb(files, id);
+        const result = yield upoald_service_1.UploadServices.UploadFilesIntoDb(files === null || files === void 0 ? void 0 : files.files, id);
         res.status(200).json({
             success: true,
             message: 'Product created successfully',
