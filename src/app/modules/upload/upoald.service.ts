@@ -3,19 +3,23 @@
 import { uploadOnCloud } from '../../../utils/cloudinary.utility';
 import { UploadModel } from './upload.model';
 
-const UploadFilesIntoDb = async (files: any) => {
+const UploadFilesIntoDb = async (files: Express.Multer.File[], id: string) => {
   if (files && files.length > 0) {
-    const uploadPromises = files.map((file: any) => uploadOnCloud(file.path));
+    const uploadPromises = files.map((file) => uploadOnCloud(file.path));
     const uploadResults = await Promise.all(uploadPromises);
 
-    // Filter out any null results (upload failures)
     const validResults = uploadResults.filter((result) => result !== null);
 
     if (validResults.length > 0) {
-      // Store the array of uploaded URLs in the database
       const imageUrls = validResults.map((result) => result.secure_url);
-      const result = await UploadModel.create({ upload: imageUrls });
 
+      const result = await UploadModel.findOneAndUpdate(
+        { id },
+        { $push: { upload: { $each: imageUrls } } },
+        { upsert: true, new: true },
+      );
+
+      console.log('Updated Document:', result);
       return result;
     } else {
       throw new Error('Failed to upload all images');
@@ -24,11 +28,7 @@ const UploadFilesIntoDb = async (files: any) => {
   throw new Error('No files provided');
 };
 
-
-
-
-
-const getAllProductIntoDb = async () => {
+const getAllUploadFilesIntoDb = async () => {
   const result = await UploadModel.find();
   return result;
 };
@@ -44,6 +44,6 @@ const getSingleProductFromDB = async (id: string) => {
 
 export const UploadServices = {
   UploadFilesIntoDb,
-  getAllProductIntoDb,
+  getAllUploadFilesIntoDb,
   getSingleProductFromDB,
 };

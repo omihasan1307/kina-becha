@@ -16,6 +16,6 @@ router.post(
 //   },
   UploadController.createUpload,
 );
-router.get('/', UploadController.getAllProduct);
+router.get('/', UploadController.getAllUploadFiles);
 
 export const UploadRoutes = router;
