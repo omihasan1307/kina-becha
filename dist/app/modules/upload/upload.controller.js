@@ -12,30 +12,38 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UploadController = void 0;
 const upoald_service_1 = require("./upoald.service");
 const createUpload = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
     try {
-        const files = req.files;
-        if (!((_b = (_a = files === null || files === void 0 ? void 0 : files.files) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.path)) {
+        let files = [];
+        if (Array.isArray(req.files)) {
+            files = req.files;
+        }
+        else if (req.files &&
+            typeof req.files === 'object' &&
+            'files' in req.files) {
+            files = req.files.files;
+        }
+        const { id } = req.body;
+        if (!files.length || !files[0].path) {
             throw new Error('Images are required.');
         }
-        const result = yield upoald_service_1.UploadServices.UploadFilesIntoDb(files === null || files === void 0 ? void 0 : files.files);
+        const result = yield upoald_service_1.UploadServices.UploadFilesIntoDb(files, id);
         res.status(200).json({
             success: true,
-            message: 'Product created Successfully',
+            message: 'Product created successfully',
             data: result,
         });
     }
     catch (error) {
         res.status(500).json({
             success: false,
-            message: 'something went wrong',
+            message: 'Something went wrong',
             error: error,
         });
     }
 });
-const getAllProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllUploadFiles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield upoald_service_1.UploadServices.getAllProductIntoDb();
+        const result = yield upoald_service_1.UploadServices.getAllUploadFilesIntoDb();
         res.status(200).json({
             success: true,
             message: 'Products are retrived successfully',
@@ -70,6 +78,6 @@ const getSingleProduct = (req, res) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.UploadController = {
     createUpload,
-    getAllProduct,
+    getAllUploadFiles,
     getSingleProduct,
 };

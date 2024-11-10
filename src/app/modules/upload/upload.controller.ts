@@ -5,14 +5,17 @@ const createUpload = async (req: Request, res: Response) => {
   try {
     let files: Express.Multer.File[] = [];
 
-    // Check if req.files is an array or an object with a "files" key
     if (Array.isArray(req.files)) {
-      files = req.files; // req.files is an array of files
-    } else if (req.files && typeof req.files === 'object' && 'files' in req.files) {
-      files = req.files.files as Express.Multer.File[]; // req.files is an object containing arrays of files
+      files = req.files;
+    } else if (
+      req.files &&
+      typeof req.files === 'object' &&
+      'files' in req.files
+    ) {
+      files = req.files.files as Express.Multer.File[];
     }
 
-    const { id } = req.body; // Assuming `id` is passed in the request body
+    const { id } = req.body;
 
     if (!files.length || !files[0].path) {
       throw new Error('Images are required.');
@@ -33,7 +36,6 @@ const createUpload = async (req: Request, res: Response) => {
     });
   }
 };
-
 
 const getAllUploadFiles = async (req: Request, res: Response) => {
   try {

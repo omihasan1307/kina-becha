@@ -14,16 +14,14 @@ exports.UploadServices = void 0;
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const cloudinary_utility_1 = require("../../../utils/cloudinary.utility");
 const upload_model_1 = require("./upload.model");
-const UploadFilesIntoDb = (files) => __awaiter(void 0, void 0, void 0, function* () {
+const UploadFilesIntoDb = (files, id) => __awaiter(void 0, void 0, void 0, function* () {
     if (files && files.length > 0) {
         const uploadPromises = files.map((file) => (0, cloudinary_utility_1.uploadOnCloud)(file.path));
         const uploadResults = yield Promise.all(uploadPromises);
-        // Filter out any null results (upload failures)
         const validResults = uploadResults.filter((result) => result !== null);
         if (validResults.length > 0) {
-            // Store the array of uploaded URLs in the database
             const imageUrls = validResults.map((result) => result.secure_url);
-            const result = yield upload_model_1.UploadModel.create({ upload: imageUrls });
+            const result = yield upload_model_1.UploadModel.findOneAndUpdate({ id }, { $push: { upload: { $each: imageUrls } } }, { upsert: true, new: true });
             return result;
         }
         else {
@@ -32,7 +30,7 @@ const UploadFilesIntoDb = (files) => __awaiter(void 0, void 0, void 0, function*
     }
     throw new Error('No files provided');
 });
-const getAllProductIntoDb = () => __awaiter(void 0, void 0, void 0, function* () {
+const getAllUploadFilesIntoDb = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield upload_model_1.UploadModel.find();
     return result;
 });
@@ -46,6 +44,6 @@ const getSingleProductFromDB = (id) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.UploadServices = {
     UploadFilesIntoDb,
-    getAllProductIntoDb,
+    getAllUploadFilesIntoDb,
     getSingleProductFromDB,
 };

@@ -19,7 +19,6 @@ const UploadFilesIntoDb = async (files: Express.Multer.File[], id: string) => {
         { upsert: true, new: true },
       );
 
-      console.log('Updated Document:', result);
       return result;
     } else {
       throw new Error('Failed to upload all images');

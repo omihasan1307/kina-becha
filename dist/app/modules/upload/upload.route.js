@@ -16,5 +16,5 @@ router.post('/create-upload', multer_middleware_1.upload.fields([
 //     next();
 //   },
 upload_controller_1.UploadController.createUpload);
-router.get('/', upload_controller_1.UploadController.getAllProduct);
+router.get('/', upload_controller_1.UploadController.getAllUploadFiles);
 exports.UploadRoutes = router;
